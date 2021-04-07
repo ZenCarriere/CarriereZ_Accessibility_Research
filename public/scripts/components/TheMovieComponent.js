@@ -1,100 +1,50 @@
 export default {
-    name: "TheHomeComponent",
-
-    props: ['currentuser'],
-
+    name: "TheDefaultComponent",
     template: `
-    <div class="container">
-        <div class="row">
-            <div class="col-12 order-2 order-md-1 col-md-3 media-container">
-                <h4 class="media-title">{{currentMediaDetails.movies_title}}</h4>
-                <p class="media-details" v-html="currentMediaDetails.movies_storyline"></p>
-                <span class="media-time">{{currentMediaDetails.movies_runtime}}</span>
-                <span class="media-year">Released in {{currentMediaDetails.movies_year}}</span>
+        <div class="container">
+            <div class="board">
+                <h1 class="title">Accessibility Demo</h1>
+                <p class="prompt">Select one of the logos below to access the content</p>
+                <hr class="my-4">   
+                <div class="images">
+                    <img src="images/note.png" alt="song logo" id="note" @click="GoSong()">
+                    <img src="images/Jaws.png" alt="movie logo"  id="jaws" @click="GoMovie()">
+                    <img src="images/Star.png" alt="show logo"  id="star" @click="GoShow()">
+                </div>        
             </div>
 
-            <div class="col-12 order-1 order-md-2 col-md-9 media-container">
-                <video autoplay controls muted :src="'video/' + currentMediaDetails.movies_trailer" class="fs-video"></video>
+            <div class="moviediv">
+
+            <h2 id="movietitle">Jaws (1975)</h2>
+
+                <video controls>
+                    <source src="video/JawsTrailer.mp4" type="video/mp4">
+                    <track label="English" kind="subtitles" srclang="en" src="captions/jaws.vtt">
+                    Your browser does not support the video tag.
+                </video>
+
+            <h3 id="moviedirect">Directed by: Steven Spielberg</h3>
+            <h3 id="moviestar">Starring: Roy Scheider, Richard Dreyfuss, Robert Shaw, and Lorraine Gary</h3>
+            <p id="movieplot">During a beach party at dusk on Amity Island, a young woman, Chrissie Watkins, goes skinny dipping in the ocean. While treading water, she is violently pulled under. The next day, her partial remains are found on shore. The medical examiner's conclusion that the death was due to a shark attack leads police chief Martin Brody to close the beaches. Mayor Larry Vaughn persuades him to reverse his decision, fearing that the town's summer economy will be ruined and points out that the town has never had trouble with sharks. The coroner tentatively concurs with the mayor's theory that Chrissie was killed in a boating accident. Brody reluctantly accepts their conclusion until the shark kills a young boy, Alex Kintner, in full view of a crowded beach. A bounty is placed on the shark, causing an amateur shark-hunting frenzy, and local professional shark fisherman Quint offers to catch and kill it for $10,000. Meanwhile, consulting oceanographer Matt Hooper examines Chrissie's remains, and confirms her death was caused by a shark—an unusually large one.</p>
+
             </div>
         </div>
+     `,
 
-        <div class="row"> <!-- 2-up for nav and media info -->
-            <nav class="col-12 col-sm-3 side-nav">
-                <ul class="media-type">
-                    <li v-for="media in mediaTypes" :data-type="media.description">
-                        <span>
-                            <i v-bind:class="[media.iconClass]"></i>
-                        </span>
-                        
-                        <span class="d-none d-md-block">{{ media.description }}</span>
-                    </li>
-                </ul>
-            </nav>
+     methods:{
+        GoSong() {
 
-            <div class="col-12 col-sm-9 media-info">
-                <!-- genres for video -->
-                <ul class="media-genres">
-                    <li>
-                        <a href="action">Action</a>
-                    </li>
-                    <li>
-                        <a href="comedy">Comedy</a>
-                    </li>
-                    <li>
-                        <a href="family">Family</a>
-                    </li>
-                    <li>
-                        <a href="fantasyr">Fantasy</a>
-                    </li>
-                    <li>
-                        <a href="all">All</a>
-                    </li>
-                </ul>
-
-                <div class="thumb-wrapper clearfix">
-                    <img v-for="media in retrievedMedia" :src="'../video/' + media.movies_cover" alt="media thumb" class="img-thumbnail rounded float-left media-thumb" @click="switchCurrentMedia(media)">
-                </div>
-            </div>       
-        </div> <!-- end 2-up for media info -->
-    </div>
-    `,
-
-    data() {
-        return {
-            // push first (or random) media object here (selected / filtered on create)
-            currentMediaDetails: {},
-
-            // could add more media types here in future
-            mediaTypes: [
-                { iconClass: "fas fa-headphones", description: "audio" },
-                { iconClass: "fas fa-film", description: "video" },
-                { iconClass: "fas fa-tv", description: "television" }
-            ],
-
-            retrievedMedia: [],
-        }
-    },
-
-    created: function() {
-        this.loadMedia(null, 'movies');
-    },
-
-    methods: {
-        loadMedia(filter, mediaType) {
-            let url = (filter == null) ? `/api/${mediaType}` : `/api/${mediaType}/${filter}`;
-
-            fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                this.retrievedMedia = data;
-
-                this.currentMediaDetails = data[Math.floor(Math.random() * data.length)];
-            })
-        .catch((err) => console.error(err));
+            this.$router.push({ name: "song"});
         },
 
-        switchCurrentMedia(media){
-            this.currentMediaDetails = media;
+        GoMovie() {
+
+            this.$router.push({ name: "movie"});
+        },
+
+        GoShow() {
+
+            this.$router.push({ name: "show"});
         }
-    }
+     }
 }
